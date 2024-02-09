@@ -1,6 +1,7 @@
 const { uniV3Export } = require('../helper/uniswapV3')
-const { staking } = require('../helper/staking')
+// const { staking } = require('../helper/staking')
 const { mergeExports } = require("../helper/utils");
+const sdk = require("@defillama/sdk");
 const factory = '0x30F317A9EC0f0D06d5de0f8D248Ec3506b7E4a8A'
 const stakingAddress = '0x326928476f877dcca13dd7d43ce3b0bdb4dcf6f2'
 
@@ -17,10 +18,22 @@ const stakingTokens = [
   '0xFf7412Ea7C8445C46a8254dFB557Ac1E48094391', // pli
   '0x5D5f074837f5d4618B3916ba74De1Bf9662a3fEd', // srx
 ]
+
+async function staking(timestamp, block, chainBlocks) {
+  const a = await sdk.api.erc20.balanceOf({
+    target: stakingTokens[2],
+    owner: stakingAddress,
+    chain: 'xdc',
+  })
+  return {
+    [`${stakingTokens[0]}`]: a.output,
+  };
+}
+
 const stakingTVL = {
   xdc: {
     tvl: () => ({}),
-    staking: staking(stakingAddress, stakingTokens, 'xdc', null, 0),
+    staking,
   }
 }
 
